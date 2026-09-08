@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>帅哥</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 100%);
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      }
+
+      .frame {
+        position: relative;
+        width: min(76vw, 520px);
+        aspect-ratio: 4 / 5;
+        display: grid;
+        place-items: center;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 26px 60px rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(6px);
+        overflow: hidden;
+      }
+
+      .frame::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 10%, rgba(255,255,255,0.4), transparent 35%);
+      }
+
+      svg {
+        position: relative;
+        z-index: 1;
+        width: 92%;
+        height: auto;
+        filter: drop-shadow(0 30px 25px rgba(0, 0, 0, 0.2));
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <svg viewBox="0 0 500 610" aria-label="帅哥插画" role="img">
+        <defs>
+          <linearGradient id="bgGlow" x1="0" x2="1">
+            <stop offset="0%" stop-color="#fdf2f8" />
+            <stop offset="100%" stop-color="#dbeafe" />
+          </linearGradient>
+          <linearGradient id="shirtGrad" x1="0" x2="1">
+            <stop offset="0%" stop-color="#2dd4bf"/>
+            <stop offset="100%" stop-color="#0f766e"/>
+          </linearGradient>
+          <linearGradient id="skinGrad" x1="0" x2="1">
+            <stop offset="0%" stop-color="#f8d4b3"/>
+            <stop offset="100%" stop-color="#efb98d"/>
+          </linearGradient>
+          <linearGradient id="jacketGrad" x1="0" x2="1">
+            <stop offset="0%" stop-color="#1f2937"/>
+            <stop offset="100%" stop-color="#111827"/>
+          </linearGradient>
+        </defs>
+
+        <circle cx="250" cy="155" r="145" fill="url(#bgGlow)" opacity="0.9"/>
+
+        <g>
+          <path d="M120 470 Q250 350 380 470 L390 610 L110 610 Z" fill="url(#jacketGrad)"/>
+          <path d="M160 480 L210 610 L165 610 L130 480 Z" fill="#0b1220" opacity="0.7"/>
+          <path d="M340 480 L290 610 L335 610 L370 480 Z" fill="#0b1220" opacity="0.7"/>
+
+          <path d="M180 495 Q250 430 320 495 L310 610 L190 610 Z" fill="url(#shirtGrad)"/>
+          <path d="M236 490 L250 610 L264 490" fill="#d1fae5" opacity="0.7"/>
+          <path d="M205 500 L245 550 L290 500" fill="none" stroke="#d1fae5" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <rect x="220" y="270" width="60" height="90" rx="18" fill="url(#skinGrad)"/>
+          <path d="M180 245 C180 145, 320 145, 320 245 L300 245 C300 205, 200 205, 200 245 Z" fill="#1a2236"/>
+          <path d="M170 236 C175 155, 230 120, 250 120 C270 120, 325 155, 330 236 C310 220, 286 212, 250 210 C213 212, 190 220, 170 236 Z" fill="#171f2d"/>
+          <path d="M190 238 C160 214, 150 175, 170 140 C180 120, 200 103, 230 100 L250 120 C225 122, 205 132, 194 150 C184 167, 182 194, 190 238 Z" fill="#1b2435"/>
+          <path d="M310 238 C340 214, 350 175, 330 140 C320 120, 300 103, 270 100 L250 120 C275 122, 295 132, 306 150 C316 167, 318 194, 310 238 Z" fill="#1b2435"/>
+
+          <ellipse cx="250" cy="272" rx="118" ry="115" fill="url(#skinGrad)"/>
+          <path d="M150 280 C170 210, 210 178, 250 178 C290 178, 330 210, 350 280 L337 315 C318 289, 292 272, 250 268 C207 272, 180 289, 164 315 Z" fill="url(#skinGrad)"/>
+
+          <ellipse cx="210" cy="255" rx="15" ry="20" fill="#fff"/>
+          <ellipse cx="290" cy="255" rx="15" ry="20" fill="#fff"/>
+          <ellipse cx="214" cy="260" rx="6" ry="9" fill="#1a1a1a"/>
+          <ellipse cx="286" cy="260" rx="6" ry="9" fill="#1a1a1a"/>
+          <circle cx="217" cy="256" r="2.5" fill="#fff"/>
+          <circle cx="289" cy="256" r="2.5" fill="#fff"/>
+
+          <path d="M193 228 Q212 216 226 226" fill="none" stroke="#25233d" stroke-width="7" stroke-linecap="round"/>
+          <path d="M307 228 Q288 216 274 226" fill="none" stroke="#25233d" stroke-width="7" stroke-linecap="round"/>
+
+          <path d="M250 243 C243 252, 238 268, 240 280 C248 286, 252 286, 260 280 C262 268, 257 252, 250 243 Z" fill="#f4b6a8" opacity="0.7"/>
+          <path d="M250 278 Q236 290 230 306 C241 313 249 316 250 316 C251 316 259 313 270 306 C264 290 250 278 250 278 Z" fill="#e6a78d" opacity="0.85"/>
+
+          <path d="M227 300 C240 312, 260 312, 273 300" fill="none" stroke="#8d4b52" stroke-width="5" stroke-linecap="round"/>
+          <path d="M205 330 C222 348, 239 356, 250 356 C261 356, 278 348, 295 330" fill="none" stroke="#b75a5a" stroke-width="6" stroke-linecap="round"/>
+
+          <circle cx="160" cy="232" r="8" fill="#f0c6a0"/>
+          <circle cx="340" cy="232" r="8" fill="#f0c6a0"/>
+
+          <path d="M150 360 L112 430" stroke="#d8a97a" stroke-width="18" stroke-linecap="round"/>
+          <path d="M350 360 L388 430" stroke="#d8a97a" stroke-width="18" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+  </body>
+</html>
