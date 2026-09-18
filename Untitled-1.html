@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>鹈鹕骑行大冒险</title>
+	<style>
+		* { box-sizing: border-box; }
+		body { margin: 0; overflow: hidden; background: #a8e8f5; font-family: system-ui, sans-serif; color: #174b63; }
+		canvas { display: block; width: 100vw; height: 100vh; }
+		#ui { position: fixed; inset: 0 0 auto 0; display: flex; justify-content: space-between; padding: 18px 24px; pointer-events: none; font-weight: 800; font-size: 20px; text-shadow: 0 2px #fff; }
+		#tip { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; background: #ffffffdd; border: 3px solid #286b82; border-radius: 18px; padding: 22px 30px; box-shadow: 0 8px 0 #286b8244; }
+		#tip h1 { margin: 0 0 8px; color: #e17742; }
+		#tip p { margin: 6px 0; }
+		button { border: 0; border-radius: 12px; background: #f28b4b; color: white; padding: 11px 22px; font-size: 17px; font-weight: bold; cursor: pointer; }
+		button:hover { background: #df6f35; }
+	</style>
+</head>
+<body>
+	<canvas id="game"></canvas>
+	<div id="ui"><span>得分：<b id="score">0</b></span><span>最高分：<b id="best">0</b></span></div>
+	<div id="tip"><h1>🪶 鹈鹕骑行大冒险</h1><p>按 <b>空格 / ↑</b> 跳过木箱，收集小鱼！</p><button id="start">开始游戏</button></div>
+	<script>
+		const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+		const scoreEl = document.getElementById('score'), bestEl = document.getElementById('best'), tip = document.getElementById('tip');
+		let W, H, dpr, running = false, last = 0, score = 0, speed = 320, obstacles = [], fish = [], clouds = [];
+		let best = +localStorage.pelicanBest || 0; bestEl.textContent = best;
+		const bird = { x: 130, y: 0, vy: 0, r: 36, ground: 0 };
+		function resize() { dpr = devicePixelRatio || 1; W = innerWidth; H = innerHeight; canvas.width = W*dpr; canvas.height = H*dpr; canvas.style.width=W+'px'; canvas.style.height=H+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); bird.ground=H-105; if (!running) bird.y=bird.ground; }
+		addEventListener('resize', resize); resize();
+		for(let i=0;i<8;i++) clouds.push({x:Math.random()*W,y:50+Math.random()*180,s:25+Math.random()*35});
+		function jump() { if (!running) return; if (bird.y >= bird.ground-1) bird.vy=-650; }
+		addEventListener('keydown', e => { if ((e.code==='Space'||e.code==='ArrowUp') && !e.repeat) { e.preventDefault(); jump(); } });
+		canvas.addEventListener('pointerdown', jump);
+		document.getElementById('start').onclick = () => { tip.style.display='none'; running=true; score=0; speed=320; obstacles=[]; fish=[]; bird.y=bird.ground; bird.vy=0; last=performance.now(); requestAnimationFrame(loop); };
+		function addItem() { if(Math.random()<.62) obstacles.push({x:W+30,w:38+Math.random()*25,h:35+Math.random()*42}); else fish.push({x:W+30,y:bird.ground-80-Math.random()*110,r:13}); }
+		function drawPelican() {
+			ctx.save(); ctx.translate(bird.x,bird.y); ctx.rotate(Math.max(-.18,Math.min(.18,bird.vy/1800)));
+			ctx.strokeStyle='#174b63'; ctx.lineWidth=5; ctx.fillStyle='#f5f0dc';
+			ctx.beginPath(); ctx.arc(0,-18,27,0,Math.PI*2); ctx.fill(); ctx.stroke();
+			ctx.fillStyle='#e48b43'; ctx.beginPath(); ctx.moveTo(17,-14); ctx.quadraticCurveTo(64,-5,18,7); ctx.quadraticCurveTo(30,-2,17,-14); ctx.fill(); ctx.stroke();
+			ctx.fillStyle='#1b3945'; ctx.beginPath(); ctx.arc(10,-26,4,0,Math.PI*2); ctx.fill();
+			ctx.fillStyle='#8eb3bb'; ctx.beginPath(); ctx.ellipse(-8,-20,18,10,-.5,0,Math.PI*2); ctx.fill();
+			ctx.strokeStyle='#d65f3b'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(-12,8); ctx.lineTo(-20,26); ctx.moveTo(10,8); ctx.lineTo(18,26); ctx.stroke();
+			ctx.strokeStyle='#286b82'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(-5,35,25,0,Math.PI*2); ctx.arc(48,35,25,0,Math.PI*2); ctx.moveTo(-5,35); ctx.lineTo(48,35); ctx.lineTo(17,4); ctx.lineTo(-5,35); ctx.moveTo(17,4); ctx.lineTo(48,35); ctx.stroke(); ctx.restore();
+		}
+		function drawWorld() { ctx.fillStyle='#a8e8f5'; ctx.fillRect(0,0,W,H); clouds.forEach(c=>{ctx.fillStyle='#ffffffaa'; ctx.beginPath();ctx.arc(c.x,c.y,c.s,0,7);ctx.arc(c.x+c.s*.8,c.y+5,c.s*.7,0,7);ctx.fill();}); ctx.fillStyle='#78c96b';ctx.fillRect(0,H-105,W,105); ctx.fillStyle='#e3c17a';ctx.fillRect(0,H-92,W,92); for(let x=-(performance.now()/8%60);x<W;x+=60){ctx.fillStyle='#c49b5e';ctx.fillRect(x,H-55,28,4);} }
+		function loop(now) { if(!running) return; const dt=Math.min((now-last)/1000,.04); last=now; speed+=dt*5; score+=dt*10; scoreEl.textContent=Math.floor(score); bird.vy+=1500*dt; bird.y+=bird.vy*dt; if(bird.y>bird.ground){bird.y=bird.ground;bird.vy=0;} if(Math.random()<dt*.9) addItem(); obstacles.forEach(o=>o.x-=speed*dt); fish.forEach(f=>f.x-=speed*dt); obstacles=obstacles.filter(o=>o.x>-80); fish=fish.filter(f=>f.x>-40); for(const o of obstacles) if(bird.x+23>o.x&&bird.x-23<o.x+o.w&&bird.y+25>bird.ground-o.h) return gameOver(); for(let i=fish.length-1;i>=0;i--) if(Math.hypot(fish[i].x-bird.x,fish[i].y-bird.y)<40){fish.splice(i,1);score+=25;} drawWorld(); fish.forEach(f=>{ctx.fillStyle='#f4b83f';ctx.beginPath();ctx.ellipse(f.x,f.y,15,9,0,0,7);ctx.fill();ctx.fillStyle='#e17742';ctx.beginPath();ctx.moveTo(f.x-14,f.y);ctx.lineTo(f.x-26,f.y-9);ctx.lineTo(f.x-24,f.y+9);ctx.fill();}); obstacles.forEach(o=>{ctx.fillStyle='#9b603c';ctx.fillRect(o.x,bird.ground-o.h,o.w,o.h);ctx.fillStyle='#d18a52';ctx.fillRect(o.x+6,bird.ground-o.h+7,8,o.h-10);}); drawPelican(); requestAnimationFrame(loop); }
+		function gameOver(){running=false; best=Math.max(best,Math.floor(score));localStorage.pelicanBest=best;bestEl.textContent=best;tip.style.display='block';tip.querySelector('h1').textContent='撞到木箱啦！';tip.querySelector('p').innerHTML='本次得分：<b>'+Math.floor(score)+'</b><br>再试一次，游得更远！';document.getElementById('start').textContent='重新开始';}
+	</script>
+</body>
+</html>
